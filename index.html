@@ -8,14 +8,7 @@
         :root {
             --phone-bg: #f5f5f7;
             --text-dark: #1d1d1f;
-            --text-gray: #86868b;
             --ios-blue: #007aff;
-            --green-msg: #34c759;
-            --red-music: #ff3b30;
-            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
-            --radius-lg: 36px;
-            --radius-md: 18px;
-            --transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
         * {
             margin: 0;
@@ -28,23 +21,23 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', 'PingFang SC', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'PingFang SC', sans-serif;
             user-select: none;
             -webkit-tap-highlight-color: transparent;
         }
-
         .phone {
             width: 390px;
             height: 780px;
             background: #1c1c1e;
             border-radius: 48px;
             padding: 12px;
-            box-shadow: 0 0 0 2px #2d2d30, 0 0 0 6px #1a1a1e, 0 30px 80px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 0 2px #2d2d30, 0 0 0 6px #1a1a1e, 0 30px 80px rgba(0,0,0,0.5);
             position: relative;
+            display: flex;
+            flex-direction: column;
         }
         .screen {
-            width: 100%;
-            height: 100%;
+            flex: 1;
             background: #fff;
             border-radius: 38px;
             overflow: hidden;
@@ -52,68 +45,22 @@
             display: flex;
             flex-direction: column;
         }
-
-        /* 状态栏 */
-        .status-bar {
-            padding: 16px 28px 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 13px;
+        /* 融入屏幕的时间标签 */
+        .in-screen-time {
+            position: absolute;
+            top: 16px;
+            left: 28px;
+            z-index: 100;
+            font-size: 14px;
             font-weight: 600;
             color: #1d1d1f;
-            flex-shrink: 0;
-            background: #fff;
+            background: rgba(245,245,247,0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 4px 12px;
+            border-radius: 20px;
+            pointer-events: none;
         }
-        .status-left {
-            width: 60px;
-            text-align: left;
-        }
-        .status-center {
-            width: 60px;
-            text-align: center;
-        }
-        .status-right {
-            width: 60px;
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            gap: 4px;
-        }
-        .battery-icon {
-            width: 24px;
-            height: 11px;
-            border: 1.5px solid #1d1d1f;
-            border-radius: 3px;
-            padding: 2px;
-            display: flex;
-            align-items: center;
-        }
-        .battery-fill {
-            height: 100%;
-            background: #1d1d1f;
-            border-radius: 1px;
-            width: 72%;
-        }
-        .battery-tip {
-            width: 3px;
-            height: 5px;
-            background: #1d1d1f;
-            border-radius: 0 2px 2px 0;
-        }
-        .signal-dots {
-            display: flex;
-            gap: 2px;
-            align-items: flex-end;
-            height: 11px;
-        }
-        .signal-dots span {
-            width: 3px;
-            background: #1d1d1f;
-            border-radius: 1px;
-        }
-
-        /* 主屏幕 */
         .home-screen {
             flex: 1;
             background: #f5f5f7;
@@ -142,15 +89,15 @@
             bottom: 30px;
             left: 20px;
             right: 20px;
-            background: rgba(255, 255, 255, 0.72);
+            background: rgba(255,255,255,0.72);
             backdrop-filter: blur(30px);
             -webkit-backdrop-filter: blur(30px);
             border-radius: 28px;
             padding: 10px 16px;
             display: flex;
             justify-content: center;
-            gap: 40px;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+            gap: 30px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
         }
         .app-item {
             display: flex;
@@ -172,1381 +119,417 @@
             justify-content: center;
             font-size: 28px;
             color: #fff;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
-        .app-icon.wechat {
-            background: #34c759;
-        }
-        .app-icon.music {
-            background: #fc3c44;
-        }
-        .app-label {
-            font-size: 11px;
-            color: #1d1d1f;
-            font-weight: 500;
-            letter-spacing: 0.2px;
-        }
+        .app-icon.wechat { background: #34c759; }
+        .app-icon.music { background: #fc3c44; }
+        .app-icon.notes { background: #f5d547; color: #333; }
+        .app-label { font-size: 11px; color: #1d1d1f; font-weight: 500; }
 
-        /* 微信容器 */
+        /* 微信 */
         .wechat-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: none;
-            flex-direction: column;
-            background: #f2f2f7;
-            z-index: 20;
-            border-radius: 38px;
-            overflow: hidden;
+            position: absolute; top:0; left:0; width:100%; height:100%;
+            display: none; flex-direction: column; background: #f2f2f7; z-index:20;
+            border-radius:38px; overflow:hidden;
         }
-        .wechat-container.active {
-            display: flex;
-        }
+        .wechat-container.active { display:flex; }
         .wechat-header {
-            background: #f2f2f7;
-            padding: 14px 20px 12px;
-            font-size: 30px;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-            color: #000;
-            flex-shrink: 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            background:#f2f2f7; padding:14px 20px 12px; font-size:30px; font-weight:700; color:#000;
+            flex-shrink:0; display:flex; justify-content:space-between; align-items:center;
         }
-        .wechat-header .back-home {
-            font-size: 15px;
-            color: #007aff;
-            cursor: pointer;
-            font-weight: 500;
-        }
-        .search-bar {
-            padding: 0 16px 12px;
-            flex-shrink: 0;
-        }
-        .search-bar input {
-            width: 100%;
-            background: #e3e3e8;
-            border: none;
-            border-radius: 10px;
-            padding: 10px 16px;
-            font-size: 15px;
-            color: #000;
-            outline: none;
-            font-family: inherit;
-        }
-        .search-bar input::placeholder {
-            color: #8e8e93;
-        }
-        .contact-list {
-            flex: 1;
-            overflow-y: auto;
-            background: #fff;
-            border-radius: 12px 12px 0 0;
-            margin: 0 8px;
-        }
-        .contact-item {
-            display: flex;
-            align-items: center;
-            padding: 12px 16px;
-            gap: 12px;
-            border-bottom: 0.5px solid #f0f0f5;
-            cursor: pointer;
-            transition: background 0.15s;
-        }
-        .contact-item:active {
-            background: #e8e8ed;
-        }
-        .contact-item.shake {
-            animation: shake 0.4s ease-in-out;
-        }
-        @keyframes shake {
-            0%,
-            100% {
-                transform: translateX(0);
-            }
-            25% {
-                transform: translateX(-5px);
-            }
-            75% {
-                transform: translateX(5px);
-            }
-        }
-        .contact-avatar {
-            width: 46px;
-            height: 46px;
-            border-radius: 50%;
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 17px;
-            font-weight: 600;
-            color: #fff;
-        }
-        .contact-avatar.lin {
-            background: #5e8cf7;
-        }
-        .contact-avatar.ghost {
-            background: #0a0a0c;
-            color: #0a0a0c;
-        }
-        .contact-info {
-            flex: 1;
-            min-width: 0;
-        }
-        .contact-name {
-            font-size: 16px;
-            font-weight: 500;
-            color: #000;
-        }
-        .contact-preview {
-            font-size: 13px;
-            color: #8e8e93;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            margin-top: 2px;
-        }
-        .contact-badge {
-            background: #ff3b30;
-            color: #fff;
-            border-radius: 10px;
-            padding: 2px 7px;
-            font-size: 11px;
-            font-weight: 600;
-            min-width: 20px;
-            text-align: center;
-        }
-        .delete-btn {
-            position: absolute;
-            right: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: #ff3b30;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            padding: 8px 14px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            display: none;
-            z-index: 5;
-        }
-        .delete-btn.gray {
-            background: #8e8e93;
-        }
-        .toast {
-            position: absolute;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.78);
-            color: #fff;
-            padding: 10px 20px;
-            border-radius: 20px;
-            font-size: 13px;
-            z-index: 60;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.25s;
-        }
-        .toast.show {
-            opacity: 1;
-        }
+        .back-home { font-size:15px; color:#007aff; cursor:pointer; font-weight:500; }
+        .search-bar { padding:0 16px 12px; flex-shrink:0; }
+        .search-bar input { width:100%; background:#e3e3e8; border:none; border-radius:10px; padding:10px 16px; font-size:15px; color:#000; outline:none; }
+        .contact-list { flex:1; overflow-y:auto; background:#fff; border-radius:12px 12px 0 0; margin:0 8px; }
+        .contact-item { display:flex; align-items:center; padding:12px 16px; gap:12px; border-bottom:0.5px solid #f0f0f5; cursor:pointer; position:relative; }
+        .contact-avatar { width:46px; height:46px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:17px; font-weight:600; color:#fff; }
+        .contact-avatar.lin { background:#5e8cf7; }
+        .contact-avatar.ghost { background:#0a0a0c; color:#0a0a0c; }
+        .contact-info { flex:1; }
+        .contact-name { font-size:16px; font-weight:500; color:#000; }
+        .contact-preview { font-size:13px; color:#8e8e93; margin-top:2px; }
+        .delete-btn { position:absolute; right:16px; top:50%; transform:translateY(-50%); background:#ff3b30; color:#fff; border:none; border-radius:8px; padding:8px 14px; font-size:13px; font-weight:600; cursor:pointer; display:none; z-index:5; }
+        .chat-detail { position:absolute; top:0; left:0; width:100%; height:100%; display:none; flex-direction:column; z-index:30; border-radius:38px; }
+        .chat-detail.active { display:flex; }
+        .chat-header { background:#f2f2f7; padding:12px 16px; display:flex; align-items:center; gap:10px; }
+        .chat-messages { flex:1; padding:14px 12px; overflow-y:auto; display:flex; flex-direction:column; gap:8px; }
+        .msg-bubble { max-width:75%; padding:9px 13px; border-radius:18px; font-size:15px; line-height:1.4; }
+        .msg-in { background:#fff; align-self:flex-start; border-bottom-left-radius:4px; }
+        .msg-out { background:#d9fdd3; align-self:flex-end; border-bottom-right-radius:4px; }
+        .msg-ghost { background:#1c1c1e; color:#f2f2f7; align-self:flex-start; }
+        .chat-input-area { background:#f2f2f7; padding:8px 10px; display:flex; align-items:center; gap:8px; border-top:0.5px solid #d1d1d6; }
+        .chat-input { flex:1; border:1px solid #dcdcde; border-radius:20px; padding:10px 14px; font-size:15px; outline:none; background:#fff; }
+        .send-btn { background:#34c759; color:#fff; border:none; border-radius:20px; padding:10px 18px; font-size:15px; font-weight:600; cursor:pointer; }
 
-        /* 聊天详情 */
-        .chat-detail {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #e5ddd5;
-            display: none;
-            flex-direction: column;
-            z-index: 30;
-            border-radius: 38px;
-            overflow: hidden;
-        }
-        .chat-detail.active {
-            display: flex;
-        }
-        .chat-header {
-            background: #f2f2f7;
-            padding: 12px 16px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border-bottom: 0.5px solid #d1d1d6;
-            flex-shrink: 0;
-        }
-        .chat-header .back-arrow {
-            font-size: 20px;
-            cursor: pointer;
-            color: #007aff;
-            font-weight: 500;
-            padding: 6px;
-        }
-        .chat-header .chat-partner {
-            font-weight: 600;
-            font-size: 17px;
-            flex: 1;
-        }
-        .chat-messages {
-            flex: 1;
-            padding: 14px 12px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        .msg-bubble {
-            max-width: 75%;
-            padding: 9px 13px;
-            border-radius: 18px;
-            font-size: 15px;
-            line-height: 1.4;
-            word-break: break-word;
-            animation: msgPop 0.2s ease-out;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
-        }
-        @keyframes msgPop {
-            from {
-                opacity: 0;
-                transform: translateY(6px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        .msg-in {
-            background: #fff;
-            align-self: flex-start;
-            border-bottom-left-radius: 4px;
-            color: #111b21;
-        }
-        .msg-out {
-            background: #d9fdd3;
-            align-self: flex-end;
-            border-bottom-right-radius: 4px;
-            color: #111b21;
-        }
-        .msg-ghost {
-            background: #1c1c1e;
-            color: #f2f2f7;
-            align-self: flex-start;
-            border-bottom-left-radius: 4px;
-            font-weight: 500;
-        }
-        .chat-input-area {
-            background: #f2f2f7;
-            padding: 8px 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            border-top: 0.5px solid #d1d1d6;
-            flex-shrink: 0;
-            min-height: 56px;
-        }
-        .chat-input {
-            flex: 1;
-            border: 1px solid #dcdcde;
-            border-radius: 20px;
-            padding: 10px 14px;
-            font-size: 15px;
-            outline: none;
-            background: #fff;
-            color: #000;
-            font-family: inherit;
-        }
-        .send-btn {
-            background: #34c759;
-            color: #fff;
-            border: none;
-            border-radius: 20px;
-            padding: 10px 18px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            position: relative;
-            transition: all 0.2s;
-            white-space: nowrap;
-            flex-shrink: 0;
-            z-index: 50;
-        }
-        .send-btn.evading {
-            background: #8e8e93;
-        }
+        /* 音乐 */
+        .music-page { position:absolute; top:0; left:0; width:100%; height:100%; background:#1a1d22; display:none; flex-direction:column; z-index:20; border-radius:38px; color:#e8e8ec; }
+        .music-page.active { display:flex; }
+        .music-header { padding:14px 20px; display:flex; align-items:center; gap:12px; }
+        .cover-wrapper { width:230px; height:230px; border-radius:50%; overflow:hidden; margin:16px auto 8px; position:relative; }
+        .cover-img { width:100%; height:100%; object-fit:cover; filter:saturate(0.3) blur(0.6px) brightness(0.8); }
+        .song-name { font-size:20px; font-weight:600; text-align:center; color:#fff; }
+        .play-count { font-size:12px; color:#8a8a90; text-align:center; margin-top:4px; }
+        .progress-area { padding:6px 24px 12px; display:flex; align-items:center; gap:10px; }
+        .time-label { font-size:11px; color:#6a6a72; width:32px; text-align:center; }
+        .progress-bar { flex:1; height:3px; background:#3a3a40; border-radius:2px; cursor:pointer; position:relative; }
+        .progress-fill { height:100%; background:#c0c0c8; border-radius:2px; width:0%; }
+        .lyric-container { flex:1; display:flex; align-items:center; justify-content:center; padding:8px 24px; min-height:80px; }
+        .lyric-line { font-size:19px; letter-spacing:1.5px; text-align:center; color:#d0d0d6; }
+        .love-bomb { position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:35; }
+        .love-bomb span { position:absolute; color:#ff3b30; font-weight:900; animation:fadeInOut 2.5s ease-out forwards; white-space:nowrap; }
+        @keyframes fadeInOut { 0%{opacity:0;transform:scale(0.5);} 20%{opacity:1;transform:scale(1);} 80%{opacity:1;} 100%{opacity:0;transform:scale(1.2);} }
+        @keyframes slowSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-        /* 水珠 */
-        .water-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 28;
-            opacity: 0;
-            transition: opacity 0.5s;
-        }
-        .water-drop {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(160, 190, 210, 0.45);
-            box-shadow: 0 0 8px rgba(140, 170, 200, 0.4);
-            transition: all 1s ease-out;
-            opacity: 0;
-        }
-        .flash-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(ellipse at 45% 40%, rgba(245, 220, 160, 0.55) 0%, rgba(200, 170, 120, 0.3) 50%, rgba(30, 25, 20, 0.6) 100%);
-            pointer-events: none;
-            z-index: 27;
-            opacity: 0;
-            transition: opacity 0.06s;
-            mix-blend-mode: overlay;
-        }
-        .flash-overlay.active {
-            opacity: 1;
-        }
-        .global-popup {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 40;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-        }
-        .global-popup.show {
-            display: flex;
-        }
-        .popup-text {
-            color: #fff;
-            font-size: 22px;
-            font-weight: 700;
-            letter-spacing: 2px;
-            text-align: center;
-            margin-bottom: 20px;
-            animation: pulseText 1.8s infinite;
-        }
-        @keyframes pulseText {
-            0%,
-            100% {
-                text-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
-            }
-            50% {
-                text-shadow: 0 0 40px rgba(255, 255, 255, 0.9);
-            }
-        }
-        .popup-btn {
-            background: transparent;
-            border: 2px solid #fff;
-            color: #fff;
-            padding: 12px 30px;
-            border-radius: 24px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            letter-spacing: 1px;
-            font-family: inherit;
-        }
+        /* 备忘录 */
+        .notes-container { position:absolute; top:0; left:0; width:100%; height:100%; display:none; flex-direction:column; background:#f5f5f7; z-index:20; border-radius:38px; }
+        .notes-container.active { display:flex; }
+        .notes-header { padding:12px 20px; display:flex; align-items:center; gap:14px; background:#f5f5f7; }
+        .notes-body { flex:1; background:#ffffff; margin:0 8px 8px; border-radius:12px; display:flex; flex-direction:column; }
+        .notes-textarea { flex:1; border:none; outline:none; padding:16px 18px; font-size:16px; line-height:1.7; color:#1d1d1f; font-family:inherit; background:transparent; resize:none; }
+        .notes-toolbar { padding:8px 12px; border-top:0.5px solid #e5e5ea; background:#fafafa; }
+        .tool-btn { background:none; border:none; color:#007aff; font-size:14px; padding:8px 14px; border-radius:8px; cursor:pointer; }
 
-        /* 音乐页面 */
-        .music-page {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #1a1d22;
-            display: none;
-            flex-direction: column;
-            z-index: 20;
-            border-radius: 38px;
-            overflow: hidden;
-            color: #e8e8ec;
-        }
-        .music-page.active {
-            display: flex;
-        }
-        .music-header {
-            padding: 14px 20px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex-shrink: 0;
-        }
-        .music-header .back-home {
-            font-size: 15px;
-            cursor: pointer;
-            color: #c0c0c6;
-            font-weight: 500;
-        }
-        .music-header .page-title {
-            font-size: 18px;
-            font-weight: 500;
-            color: #d0d0d8;
-            letter-spacing: 1px;
-        }
-        .cover-section {
-            display: flex;
-            justify-content: center;
-            padding: 16px 0 8px;
-        }
-        .cover-wrapper {
-            width: 230px;
-            height: 230px;
-            border-radius: 50%;
-            overflow: hidden;
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
-            position: relative;
-        }
-        .cover-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            filter: saturate(0.3) blur(0.6px) brightness(0.8);
-        }
-        .cover-scratches {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
-        .cover-water {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(ellipse at 30% 70%, rgba(180, 200, 220, 0.3) 0%, transparent 60%),
-                radial-gradient(ellipse at 70% 30%, rgba(160, 190, 210, 0.2) 0%, transparent 50%);
-            mix-blend-mode: overlay;
-            pointer-events: none;
-        }
-        @keyframes slowSpin {
-            from {
-                transform: rotate(0deg);
-            }
-            to {
-                transform: rotate(360deg);
-            }
-        }
-        .cover-spin {
-            animation: slowSpin 20s linear infinite;
-        }
-        .cover-paused {
-            animation-play-state: paused;
-        }
-        .song-info {
-            text-align: center;
-            padding: 10px 20px 6px;
-        }
-        .song-name {
-            font-size: 20px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            color: #fff;
-        }
-        .play-count {
-            font-size: 12px;
-            color: #8a8a90;
-            margin-top: 4px;
-        }
-        .progress-area {
-            padding: 6px 24px 12px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .time-label {
-            font-size: 11px;
-            color: #6a6a72;
-            width: 32px;
-            text-align: center;
-        }
-        .progress-bar {
-            flex: 1;
-            height: 3px;
-            background: #3a3a40;
-            border-radius: 2px;
-            cursor: pointer;
-            position: relative;
-        }
-        .progress-fill {
-            height: 100%;
-            background: #c0c0c8;
-            border-radius: 2px;
-            width: 0%;
-            transition: width 0.1s linear;
-        }
-        .progress-thumb {
-            position: absolute;
-            top: -6px;
-            width: 14px;
-            height: 14px;
-            background: #fff;
-            border-radius: 50%;
-            left: 0%;
-            transform: translateX(-50%);
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
-            pointer-events: none;
-        }
-        .lyric-container {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 8px 24px;
-            min-height: 80px;
-        }
-        .lyric-line {
-            font-size: 19px;
-            font-weight: 400;
-            letter-spacing: 1.5px;
-            text-align: center;
-            line-height: 1.6;
-            color: #d0d0d6;
-            word-break: break-word;
-        }
-        .lyric-char {
-            display: inline-block;
-            opacity: 0;
-            transition: opacity 0.15s, color 0.3s;
-        }
-        .lyric-char.visible {
-            opacity: 1;
-        }
-        .char-red {
-            color: #a53f3f;
-        }
-        .char-blue {
-            color: #7b9eb3;
-            margin: 0 1px;
-        }
-        .controls {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            padding: 12px 0 24px;
-            flex-shrink: 0;
-        }
-        .ctrl-btn {
-            background: none;
-            border: none;
-            color: #b0b0b8;
-            font-size: 22px;
-            cursor: pointer;
-            padding: 8px;
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .ctrl-btn:active {
-            color: #fff;
-        }
-        .ctrl-btn.disabled {
-            color: #4a4a50;
-            pointer-events: none;
-        }
-        .play-btn {
-            width: 52px;
-            height: 52px;
-            background: #2a2a30;
-            border-radius: 50%;
-            font-size: 24px;
-            color: #e0e0e6;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-        }
-        .bottom-hint {
-            text-align: center;
-            font-size: 11px;
-            color: #4a4a52;
-            padding-bottom: 14px;
-            letter-spacing: 0.5px;
-            opacity: 0;
-            transition: opacity 0.8s;
-        }
-        .bottom-hint.show {
-            opacity: 1;
-        }
-        .music-flash {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.12);
-            pointer-events: none;
-            z-index: 28;
-            opacity: 0;
-            transition: opacity 0.04s;
-        }
-        .music-flash.active {
-            opacity: 1;
-        }
-        .music-popup {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 35;
-            display: none;
-            align-items: center;
-            justify-content: center;
-        }
-        .music-popup.show {
-            display: flex;
-            animation: popFadeIn 0.3s ease-out;
-        }
-        @keyframes popFadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-        .music-popup-text {
-            color: #fff;
-            font-size: 24px;
-            font-weight: 700;
-            letter-spacing: 3px;
-            animation: popPulse 1.5s infinite;
-        }
-        @keyframes popPulse {
-            0%,
-            100% {
-                text-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
-            }
-            50% {
-                text-shadow: 0 0 40px rgba(255, 255, 255, 0.8);
-            }
-        }
-
-        @media (max-width: 420px) {
-            .phone {
-                width: calc(100vw - 12px);
-                height: calc(100vh - 30px);
-                border-radius: 36px;
-                padding: 8px;
-            }
-            .screen {
-                border-radius: 30px;
-            }
-            .wechat-container,
-            .music-page,
-            .chat-detail {
-                border-radius: 30px;
-            }
-            .cover-wrapper {
-                width: 190px;
-                height: 190px;
-            }
-        }
+        .toast { position:absolute; bottom:30px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.78); color:#fff; padding:10px 20px; border-radius:20px; font-size:13px; z-index:60; opacity:0; transition:opacity 0.25s; }
+        .toast.show { opacity:1; }
+        .shake { animation:shake 0.4s ease-in-out; }
+        @keyframes shake { 0%,100%{transform:translateX(0);} 25%{transform:translateX(-5px);} 75%{transform:translateX(5px);} }
+        .flash-overlay.active { opacity:1; }
+        .global-popup { position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:40; display:none; align-items:center; justify-content:center; flex-direction:column; }
+        .global-popup.show { display:flex; }
+        .popup-text { color:#fff; font-size:22px; font-weight:700; letter-spacing:2px; }
     </style>
 </head>
 <body>
-    <div class="phone">
-        <div class="screen" id="phoneScreen">
+<div class="phone">
+    <div class="screen" id="phoneScreen">
+        <!-- 融入屏幕的时间标签 -->
+        <div class="in-screen-time" id="statusTime">9:41</div>
 
-            <!-- 状态栏 -->
-            <div class="status-bar">
-                <span class="status-left" id="statusTime">9:41</span>
-                <span class="status-center"></span>
-                <span class="status-right">
-                    <span class="signal-dots">
-                        <span style="height:4px;"></span><span style="height:6px;"></span><span style="height:9px;"></span><span style="height:11px;"></span>
-                    </span>
-                    <span class="battery-icon"><span class="battery-fill" id="battFill"></span></span>
-                    <span class="battery-tip"></span>
-                </span>
+        <!-- 主屏幕 -->
+        <div class="home-screen active" id="homeScreen">
+            <div class="time-big" id="homeTime">9:41</div>
+            <div class="date-small" id="homeDate">6月15日 星期一</div>
+            <div class="app-dock">
+                <div class="app-item" onclick="openWechat()"><div class="app-icon wechat">💬</div><span class="app-label">微信</span></div>
+                <div class="app-item" onclick="openMusic()"><div class="app-icon music">🎵</div><span class="app-label">音乐</span></div>
+                <div class="app-item" onclick="openNotes()"><div class="app-icon notes">📝</div><span class="app-label">备忘录</span></div>
             </div>
-
-            <!-- 主屏幕 -->
-            <div class="home-screen active" id="homeScreen">
-                <div class="time-big" id="homeTime">9:41</div>
-                <div class="date-small" id="homeDate">6月15日 星期一</div>
-                <div class="app-dock">
-                    <div class="app-item" onclick="openWechat()">
-                        <div class="app-icon wechat">💬</div>
-                        <span class="app-label">微信</span>
-                    </div>
-                    <div class="app-item" onclick="openMusic()">
-                        <div class="app-icon music">🎵</div>
-                        <span class="app-label">音乐</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ==================== 微信 ==================== -->
-            <div class="wechat-container" id="wechatContainer">
-                <div class="wechat-header">
-                    微信
-                    <span class="back-home" onclick="goHome()">完成</span>
-                </div>
-                <div class="search-bar"><input type="text" placeholder="搜索" readonly></div>
-                <div class="contact-list" id="contactList">
-                    <div class="contact-item" id="contactLin" onclick="openChat('lin')">
-                        <div class="contact-avatar lin">林</div>
-                        <div class="contact-info">
-                            <div class="contact-name">林同学</div>
-                            <div class="contact-preview">我其实喜欢你很久了...</div>
-                        </div>
-                    </div>
-                    <div class="contact-item" id="contactGhost">
-                        <div class="contact-avatar ghost">​</div>
-                        <div class="contact-info">
-                            <div class="contact-name">​</div>
-                            <div class="contact-preview" id="ghostPreview">我好想你。</div>
-                        </div>
-                        <div class="contact-badge" id="ghostBadge" style="display:none;">142</div>
-                        <button class="delete-btn" id="deleteBtnGhost" onclick="event.stopPropagation(); tryDeleteGhost()">删除</button>
-                    </div>
-                </div>
-                <div class="toast" id="toast"></div>
-            </div>
-
-            <!-- 微信聊天详情 -->
-            <div class="chat-detail" id="chatLin">
-                <div class="chat-header">
-                    <span class="back-arrow" onclick="closeChat()">←</span>
-                    <span class="chat-partner">林同学</span>
-                </div>
-                <div class="chat-messages" id="chatMessagesLin">
-                    <div class="msg-bubble msg-in">嘿，在干嘛呢？</div>
-                    <div class="msg-bubble msg-out">刚跑完步</div>
-                    <div class="msg-bubble msg-in">你每天都好自律啊</div>
-                    <div class="msg-bubble msg-in">我其实喜欢你很久了，要不要试试在一起？</div>
-                </div>
-                <div class="chat-input-area" id="chatInputAreaLin">
-                    <input type="text" class="chat-input" id="chatInputLin" placeholder="输入消息..." value="好">
-                    <button class="send-btn" id="sendBtnLin" onclick="trySendLin()">发送</button>
-                </div>
-            </div>
-
-            <div class="chat-detail" id="chatGhost">
-                <div class="chat-header">
-                    <span class="back-arrow" onclick="closeChat()">←</span>
-                    <span class="chat-partner">​</span>
-                </div>
-                <div class="chat-messages" id="chatMessagesGhost" style="background:#1a1a1d;"></div>
-                <div class="chat-input-area" style="background:#1a1a1d;">
-                    <input type="text" class="chat-input" placeholder="无法输入..." readonly style="background:#2a2a2d;color:#666;">
-                    <button class="send-btn" style="background:#444;cursor:not-allowed;">发送</button>
-                </div>
-            </div>
-
-            <div class="water-overlay" id="waterOverlay"></div>
-            <div class="flash-overlay" id="flashOverlay"></div>
-            <div class="global-popup" id="globalPopup">
-                <div class="popup-text" id="popupText">陪我</div>
-                <button class="popup-btn" onclick="dismissPopup()">...</button>
-            </div>
-
-            <!-- ==================== 音乐 ==================== -->
-            <div class="music-page" id="musicPage">
-                <div class="music-header">
-                    <span class="back-home" onclick="goHome()">←</span>
-                    <span class="page-title">音乐</span>
-                </div>
-                <div class="cover-section">
-                    <div class="cover-wrapper" id="coverWrapper">
-                        <img class="cover-img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='230' height='230' viewBox='0 0 230 230'%3E%3Cdefs%3E%3CradialGradient id='g' cx='40%25' cy='35%25' r='70%25'%3E%3Cstop offset='0%25' stop-color='%23b8b0a0'/%3E%3Cstop offset='40%25' stop-color='%23807060'/%3E%3Cstop offset='100%25' stop-color='%23302820'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='230' height='230' fill='url(%23g)'/%3E%3Ccircle cx='120' cy='95' r='40' fill='%23d0c8b8' opacity='0.6'/%3E%3Ccircle cx='85' cy='125' r='28' fill='%23a09888' opacity='0.5'/%3E%3C/svg%3E" alt="cover">
-                        <canvas class="cover-scratches" id="scratchCanvas" width="230" height="230"></canvas>
-                        <div class="cover-water"></div>
-                    </div>
-                </div>
-                <div class="song-info">
-                    <div class="song-name">爱我不要丢下我</div>
-                    <div class="play-count">播放次数：4444</div>
-                </div>
-                <div class="progress-area">
-                    <span class="time-label" id="currentTimeLabel">00:00</span>
-                    <div class="progress-bar" id="progressBar" onclick="seekTo(event)">
-                        <div class="progress-fill" id="progressFill"></div>
-                        <div class="progress-thumb" id="progressThumb"></div>
-                    </div>
-                    <span class="time-label" id="totalTimeLabel">05:30</span>
-                </div>
-                <div class="lyric-container">
-                    <div class="lyric-line" id="lyricDisplay"></div>
-                </div>
-                <div class="controls">
-                    <button class="ctrl-btn disabled">⏮</button>
-                    <button class="ctrl-btn play-btn" id="playBtn" onclick="togglePlay()">▶</button>
-                    <button class="ctrl-btn disabled">⏭</button>
-                </div>
-                <div class="bottom-hint" id="bottomHint"></div>
-            </div>
-            <div class="music-flash" id="musicFlash"></div>
-            <div class="music-popup" id="musicPopup">
-                <div class="music-popup-text">别丢下我</div>
-            </div>
-
         </div>
+
+        <!-- 微信 -->
+        <div class="wechat-container" id="wechatContainer">
+            <div class="wechat-header">微信 <span class="back-home" onclick="goHome()">完成</span></div>
+            <div class="search-bar"><input type="text" placeholder="搜索" readonly></div>
+            <div class="contact-list" id="contactList">
+                <div class="contact-item" id="contactLin" onclick="openChat('lin')">
+                    <div class="contact-avatar lin">林</div>
+                    <div class="contact-info"><div class="contact-name">林同学</div><div class="contact-preview">我其实喜欢你很久了...</div></div>
+                </div>
+                <div class="contact-item" id="contactGhost">
+                    <div class="contact-avatar ghost">​</div>
+                    <div class="contact-info"><div class="contact-name">​</div><div class="contact-preview" id="ghostPreview">我好想你。</div></div>
+                    <button class="delete-btn" id="deleteBtnGhost" onclick="event.stopPropagation(); tryDeleteGhost()">删除</button>
+                </div>
+            </div>
+        </div>
+        <div class="chat-detail" id="chatLin">
+            <div class="chat-header"><span class="back-home" onclick="closeChat()">←</span><span>林同学</span></div>
+            <div class="chat-messages" id="chatMessagesLin">
+                <div class="msg-bubble msg-in">嘿，在干嘛呢？</div>
+                <div class="msg-bubble msg-out">刚跑完步</div>
+                <div class="msg-bubble msg-in">你每天都好自律啊</div>
+                <div class="msg-bubble msg-in">我其实喜欢你很久了，要不要试试在一起？</div>
+            </div>
+            <div class="chat-input-area"><input type="text" class="chat-input" id="chatInputLin" value="好"><button class="send-btn" id="sendBtnLin" onclick="trySendLin()">发送</button></div>
+        </div>
+        <div class="chat-detail" id="chatGhost">
+            <div class="chat-header"><span class="back-home" onclick="closeChat()">←</span><span>​</span></div>
+            <div class="chat-messages" id="chatMessagesGhost" style="background:#1a1a1d;"></div>
+            <div class="chat-input-area" style="background:#1a1a1d;"><input type="text" class="chat-input" placeholder="无法输入..." readonly style="background:#2a2a2d;color:#666;"><button class="send-btn" style="background:#444;">发送</button></div>
+        </div>
+
+        <!-- 音乐 -->
+        <div class="music-page" id="musicPage">
+            <div class="music-header"><span class="back-home" onclick="goHome()">←</span><span>音乐</span></div>
+            <div class="cover-wrapper" id="coverWrapper">
+                <img class="cover-img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='230' height='230' viewBox='0 0 230 230'%3E%3Cdefs%3E%3CradialGradient id='g' cx='40%25' cy='35%25' r='70%25'%3E%3Cstop offset='0%25' stop-color='%23b8b0a0'/%3E%3Cstop offset='40%25' stop-color='%23807060'/%3E%3Cstop offset='100%25' stop-color='%23302820'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='230' height='230' fill='url(%23g)'/%3E%3Ccircle cx='120' cy='95' r='40' fill='%23d0c8b8' opacity='0.6'/%3E%3Ccircle cx='85' cy='125' r='28' fill='%23a09888' opacity='0.5'/%3E%3C/svg%3E">
+            </div>
+            <div class="song-name">爱我不要丢下我</div>
+            <div class="play-count">播放次数：4444</div>
+            <div class="progress-area">
+                <span class="time-label" id="currentTimeLabel">00:00</span>
+                <div class="progress-bar" id="progressBar" onclick="seekTo(event)"><div class="progress-fill" id="progressFill"></div></div>
+                <span class="time-label" id="totalTimeLabel">05:30</span>
+            </div>
+            <div class="lyric-container"><div class="lyric-line" id="lyricDisplay"></div></div>
+            <div style="display:flex;justify-content:center;gap:30px;padding:12px 0;">
+                <button class="ctrl-btn" style="background:none;border:none;color:#b0b0b8;font-size:22px;">⏮</button>
+                <button class="ctrl-btn play-btn" id="playBtn" onclick="togglePlay()" style="background:#2a2a30;width:52px;height:52px;border-radius:50%;font-size:24px;color:#e0e0e6;">▶</button>
+                <button class="ctrl-btn" style="background:none;border:none;color:#b0b0b8;font-size:22px;">⏭</button>
+            </div>
+        </div>
+
+        <!-- 备忘录 -->
+        <div class="notes-container" id="notesContainer">
+            <div class="notes-header"><span class="back-home" onclick="goHome()">← 返回</span><span style="font-size:20px;font-weight:700;">备忘录</span></div>
+            <div class="notes-body">
+                <div class="notes-textarea" id="notesTextarea" contenteditable="true" placeholder="写点什么..."></div>
+                <div class="notes-toolbar"><button class="tool-btn" onclick="resetNotes()">新建</button></div>
+            </div>
+        </div>
+
+        <div class="flash-overlay" id="flashOverlay"></div>
+        <div class="global-popup" id="globalPopup">
+            <div class="popup-text" id="popupText">陪我</div>
+            <button class="popup-btn" onclick="dismissPopup()" style="background:transparent;border:2px solid #fff;color:#fff;padding:12px 30px;border-radius:24px;margin-top:10px;">...</button>
+        </div>
+        <div class="love-bomb" id="loveBomb"></div>
+        <div class="toast" id="toast"></div>
+        <div class="water-overlay" id="waterOverlay"></div>
     </div>
+</div>
 
-    <script>
-        (function() {
-            // ==================== 全局 ====================
-            const homeScreen = document.getElementById('homeScreen');
-            const wechatContainer = document.getElementById('wechatContainer');
-            const musicPage = document.getElementById('musicPage');
-            const chatLin = document.getElementById('chatLin');
-            const chatGhost = document.getElementById('chatGhost');
-            const statusTime = document.getElementById('statusTime');
-            const homeTime = document.getElementById('homeTime');
-            const homeDate = document.getElementById('homeDate');
-            const battFill = document.getElementById('battFill');
+<script>
+    // 全局函数暴露
+    window.goHome = goHome;
+    window.openWechat = openWechat;
+    window.openMusic = openMusic;
+    window.openNotes = openNotes;
+    window.openChat = openChat;
+    window.closeChat = closeChat;
+    window.trySendLin = trySendLin;
+    window.tryDeleteGhost = tryDeleteGhost;
+    window.togglePlay = togglePlay;
+    window.seekTo = seekTo;
+    window.dismissPopup = dismissPopup;
+    window.resetNotes = resetNotes;
 
-            let currentApp = null;
+    const homeScreen = document.getElementById('homeScreen');
+    const wechatContainer = document.getElementById('wechatContainer');
+    const musicPage = document.getElementById('musicPage');
+    const notesContainer = document.getElementById('notesContainer');
+    const chatLin = document.getElementById('chatLin');
+    const chatGhost = document.getElementById('chatGhost');
+    const globalPopup = document.getElementById('globalPopup');
+    const toast = document.getElementById('toast');
+    const flashOverlay = document.getElementById('flashOverlay');
+    const waterOverlay = document.getElementById('waterOverlay');
+    const loveBombDiv = document.getElementById('loveBomb');
 
-            function updateClock() {
-                const now = new Date();
-                const h = now.getHours().toString().padStart(2, '0');
-                const m = now.getMinutes().toString().padStart(2, '0');
-                statusTime.textContent = h + ':' + m;
-                homeTime.textContent = h + ':' + m;
-                const days = ['日', '一', '二', '三', '四', '五', '六'];
-                homeDate.textContent = `${now.getMonth()+1}月${now.getDate()}日 星期${days[now.getDay()]}`;
-                battFill.style.width = (70 + Math.floor(Math.random() * 25)) + '%';
-            }
-            updateClock();
-            setInterval(updateClock, 30000);
+    // 更新时间（屏幕内时间 + 主屏幕时间）
+    function updateClock() {
+        const now = new Date();
+        const h = now.getHours().toString().padStart(2,'0');
+        const m = now.getMinutes().toString().padStart(2,'0');
+        document.getElementById('statusTime').textContent = h + ':' + m;
+        document.getElementById('homeTime').textContent = h + ':' + m;
+        document.getElementById('homeDate').textContent = `${now.getMonth()+1}月${now.getDate()}日 星期${['日','一','二','三','四','五','六'][now.getDay()]}`;
+    }
+    updateClock(); setInterval(updateClock, 30000);
 
-            window.goHome = function() {
-                closeChat();
-                wechatContainer.classList.remove('active');
-                musicPage.classList.remove('active');
-                homeScreen.classList.add('active');
-                currentApp = null;
-                if (window._musicPlaying) {
-                    document.getElementById('coverWrapper').classList.add('cover-paused');
-                }
-                document.getElementById('musicPopup').classList.remove('show');
-                document.getElementById('musicFlash').classList.remove('active');
-            };
+    function showToast(msg) { toast.textContent = msg; toast.classList.add('show'); clearTimeout(toast._t); toast._t = setTimeout(() => toast.classList.remove('show'), 2000); }
 
-            // ==================== 微信逻辑 ====================
-            let linSendAttempts = 0;
-            let isEvading = false;
-            let evasionTimeout = null;
-            let ghostDeleteAttempts = 0;
-            let isGhostChatLocked = false;
-            const breakupDays = 142;
-            let wechatCurrentChat = null;
+    function goHome() { closeChat(); wechatContainer.classList.remove('active'); musicPage.classList.remove('active'); notesContainer.classList.remove('active'); homeScreen.classList.add('active'); globalPopup.classList.remove('show'); loveBombDiv.innerHTML = ''; if (isPlaying) pausePlay(); }
 
-            const contactList = document.getElementById('contactList');
-            const contactLin = document.getElementById('contactLin');
-            const contactGhost = document.getElementById('contactGhost');
-            const deleteBtnGhost = document.getElementById('deleteBtnGhost');
-            const ghostBadge = document.getElementById('ghostBadge');
-            const toast = document.getElementById('toast');
-            const chatMessagesLin = document.getElementById('chatMessagesLin');
-            const chatMessagesGhost = document.getElementById('chatMessagesGhost');
-            const chatInputLin = document.getElementById('chatInputLin');
-            const sendBtnLin = document.getElementById('sendBtnLin');
-            const waterOverlay = document.getElementById('waterOverlay');
-            const flashOverlay = document.getElementById('flashOverlay');
-            const globalPopup = document.getElementById('globalPopup');
-            const popupText = document.getElementById('popupText');
-            const ghostPreview = document.getElementById('ghostPreview');
+    // 微信逻辑 (完整保留)
+    let linSendAttempts = 0, isEvading = false, ghostDeleteAttempts = 0, isGhostChatLocked = false;
+    const contactGhost = document.getElementById('contactGhost'), deleteBtnGhost = document.getElementById('deleteBtnGhost'), ghostBadge = document.getElementById('ghostBadge'), ghostPreview = document.getElementById('ghostPreview');
+    const chatMessagesLin = document.getElementById('chatMessagesLin'), chatMessagesGhost = document.getElementById('chatMessagesGhost'), chatInputLin = document.getElementById('chatInputLin'), sendBtnLin = document.getElementById('sendBtnLin');
 
-            function showToast(msg, d = 1800) {
-                toast.textContent = msg;
-                toast.classList.add('show');
-                clearTimeout(toast._t);
-                toast._t = setTimeout(() => toast.classList.remove('show'), d);
-            }
+    function openWechat() { homeScreen.classList.remove('active'); musicPage.classList.remove('active'); notesContainer.classList.remove('active'); wechatContainer.classList.add('active'); }
+    contactGhost.addEventListener('touchstart', function(e){ if(e.touches.length===1) this._ts=Date.now(); }, {passive:true});
+    contactGhost.addEventListener('touchend', function(e){ if(this._ts && Date.now()-this._ts>500){ e.preventDefault(); showDeleteBtn(); } });
+    function showDeleteBtn(){ deleteBtnGhost.style.display='block'; setTimeout(()=>deleteBtnGhost.style.display='none',4000); }
+    function tryDeleteGhost(){
+        ghostDeleteAttempts++;
+        if(ghostDeleteAttempts===1) showToast('删除失败，请重试。');
+        else if(ghostDeleteAttempts===2) showToast('此联系人无法删除。');
+        else { deleteBtnGhost.style.display='none'; contactGhost.classList.add('shake'); setTimeout(()=>contactGhost.classList.remove('shake'),400); ghostBadge.style.display='inline'; ghostBadge.textContent='142'; document.getElementById('contactList').prepend(contactGhost); showToast('无法删除'); }
+    }
+    function openChat(partner){
+        if(isGhostChatLocked) return;
+        if(partner==='lin'){ chatLin.classList.add('active'); linSendAttempts=0; resetSendBtn(); chatInputLin.value='好'; }
+        else { chatGhost.classList.add('active'); populateGhostMessages(); }
+    }
+    function closeChat(){
+        if(isGhostChatLocked) return;
+        chatLin.classList.remove('active'); chatGhost.classList.remove('active'); resetSendBtn();
+        waterOverlay.innerHTML=''; waterOverlay.style.opacity='0'; flashOverlay.classList.remove('active');
+    }
+    function resetSendBtn(){ sendBtnLin.style.transform=''; sendBtnLin.style.background='#34c759'; isEvading=false; }
+    function addLinMsg(t){ const m=document.createElement('div'); m.className='msg-bubble msg-in'; m.textContent=t; chatMessagesLin.appendChild(m); chatMessagesLin.scrollTop=chatMessagesLin.scrollHeight; }
+    function evadeButton(){ isEvading=true; sendBtnLin.style.transform=`translate(${Math.random()*80}px, ${(Math.random()-0.5)*10}px)`; sendBtnLin.style.background='#8e8e93'; setTimeout(()=>{ isEvading=false; sendBtnLin.style.background='#34c759'; sendBtnLin.style.transform=''; },1000); }
+    function spawnWaterDrops(){
+        waterOverlay.innerHTML=''; waterOverlay.style.opacity='1';
+        for(let i=0;i<20;i++){ const d=document.createElement('div'); d.style.cssText=`position:absolute;width:${5+Math.random()*14}px;height:${5+Math.random()*14}px;left:${Math.random()*90}%;top:${Math.random()*90}%;background:rgba(160,190,210,0.5);border-radius:50%;opacity:0;`; waterOverlay.appendChild(d); setTimeout(()=>d.style.opacity='0.7',10); }
+        setTimeout(()=>{ waterOverlay.style.opacity='0'; },2500);
+    }
+    function sendCorruptedAndJump(){
+        const arr=['Нет','✗✗✗','...我爱你...']; const m=document.createElement('div'); m.className='msg-bubble msg-out'; m.textContent=arr[Math.floor(Math.random()*arr.length)]; chatMessagesLin.appendChild(m);
+        setTimeout(()=>{ const o=document.createElement('div'); o.className='msg-bubble msg-in'; o.innerHTML='<span style="color:#8e8e93;">对方已离线。</span>'; chatMessagesLin.appendChild(o); },600);
+        setTimeout(()=>{ chatLin.classList.remove('active'); chatGhost.classList.add('active'); isGhostChatLocked=true; populateGhostMessages(); },1400);
+    }
+    function trySendLin(){
+        if(isGhostChatLocked||isEvading) return;
+        linSendAttempts++; const input=chatInputLin;
+        if(linSendAttempts===1){ spawnWaterDrops(); input.value='你再想想……'; setTimeout(()=>{ input.value=''; addLinMsg('怎么不说话？你在犹豫吗？'); },1800); }
+        else if(linSendAttempts===2){ flashOverlay.classList.add('active'); setTimeout(()=>flashOverlay.classList.remove('active'),400); input.value='发送失败，对方可能无法接收。'; setTimeout(()=>{ input.value=''; addLinMsg('你是不是有喜欢的人了？'); },2000); }
+        else if(linSendAttempts===3){ evadeButton(); input.placeholder='输入中……'; setTimeout(()=>{ input.placeholder='输入消息...'; },2500); }
+        else { sendCorruptedAndJump(); }
+    }
+    function populateGhostMessages(){
+        chatMessagesGhost.innerHTML='';
+        const lines=['我就知道。','你巴不得我死了吧。','你之前承诺的都是假的吗。','爱我?','你到底爱不爱我。','我还不够漂亮吗。','他有我好看吗。','他就是贱货。'];
+        const all=[...lines, ...Array(8).fill('贱货。')];
+        all.forEach((txt,i)=>{ setTimeout(()=>{ const m=document.createElement('div'); m.className='msg-bubble msg-ghost'; m.textContent=txt; chatMessagesGhost.appendChild(m); chatMessagesGhost.scrollTop=chatMessagesGhost.scrollHeight; if(i===all.length-1){ setTimeout(()=>{ chatMessagesGhost.innerHTML=''; globalPopup.classList.add('show'); },600); } },i*380); });
+    }
+    function dismissPopup(){ globalPopup.classList.remove('show'); chatMessagesGhost.innerHTML=''; const m=document.createElement('div'); m.className='msg-bubble msg-ghost'; m.textContent='只能看我。'; chatMessagesGhost.appendChild(m); isGhostChatLocked=false; if(document.getElementById('contactLin')) document.getElementById('contactLin').remove(); if(ghostPreview) ghostPreview.textContent='只能看我。'; }
 
-            window.openWechat = function() {
-                homeScreen.classList.remove('active');
-                musicPage.classList.remove('active');
-                wechatContainer.classList.add('active');
-                currentApp = 'wechat';
-            };
+    // 音乐逻辑 (增加自动播放)
+    const lyricsData = [
+        { start:8, text:'记得你的美' },{ start:12, text:'记得你说夜好美' },{ start:16, text:'星星在跟随' },
+        { start:20, text:'地里还有暖风吹' },{ start:24, text:'我的咖啡 你的陶醉' },{ start:28, text:'如果还有一杯' },
+        { start:32, text:'有毒你悔不悔' },{ start:36, text:'还有梦在追' },{ start:40, text:'追到翅膀都破碎' },
+        { start:44, text:'粘起来再飞' },{ start:48, text:'天使说还有机会' },{ start:52, text:'有时犯规 有时防备' },
+        { start:56, text:'你却太轻狂又太落寞' },{ start:60, text:'失去的不过就是' },{ start:64, text:'你 爱 我 不要丢下我' },
+        { start:69, text:'让我好难过' },{ start:73, text:'一个人寂寞' },{ start:77, text:'你爱我 为什么丢下我' },
+        { start:82, text:'让我留着泪' },{ start:86, text:'看着你们手牵手走过' },{ start:92, text:'还有梦在追' },
+        { start:96, text:'追到翅膀都破碎' },{ start:100, text:'粘起来再飞' },{ start:104, text:'天使说还有机会' },
+        { start:108, text:'有时犯规 有时防备' },{ start:112, text:'你却太轻狂又太落寞' },{ start:116, text:'失去的不过就是' },
+        { start:120, text:'你 爱 我 不要丢下我' },{ start:125, text:'让我好难过' },{ start:129, text:'一个人寂寞' },
+        { start:133, text:'你爱我 为什么丢下我' },{ start:138, text:'让我留着泪' },{ start:142, text:'看着你和她手牵手走过' },
+        { start:149, text:'你爱我 就不要丢下我' },{ start:154, text:'让我好难过' },{ start:158, text:'就一个人寂寞' },
+        { start:162, text:'只是' },{ start:166, text:'你爱我 为什么丢下我' },{ start:171, text:'让我留着泪' },
+        { start:176, text:'你爱我 就不要丢下我' },{ start:181, text:'让我好难过' },{ start:185, text:'就一个人寂寞' },
+        { start:189, text:'只是' },{ start:193, text:'你爱我 为什么丢下我' },{ start:198, text:'让我留着泪' },
+        { start:203, text:'却看着你们手牵手走过' },{ start:210, text:'你爱我 就不要丢下我' },{ start:215, text:'让我好难过' }
+    ];
+    const totalDuration = 330;
+    const progressFill = document.getElementById('progressFill');
+    const currentTimeLabel = document.getElementById('currentTimeLabel');
+    const lyricDisplay = document.getElementById('lyricDisplay');
+    const playBtn = document.getElementById('playBtn');
+    const coverWrapper = document.getElementById('coverWrapper');
+    let currentTime = 0, isPlaying = false, animId = null, curLyricIdx = -1, lonelyLoop = 0, songFinished = false, musicVisible = false;
 
-            contactGhost.addEventListener('contextmenu', e => e.preventDefault());
-            contactGhost.addEventListener('touchstart', function(e) {
-                if (e.touches.length === 1) { this._ts = Date.now(); }
-            }, { passive: true });
-            contactGhost.addEventListener('touchend', function(e) {
-                if (this._ts && Date.now() - this._ts > 500) { e.preventDefault();
-                    showDeleteBtn(); }
-            });
-            contactGhost.addEventListener('mousedown', function(e) { if (e.button === 0) this._md = Date.now(); });
-            contactGhost.addEventListener('mouseup', function(e) {
-                if (this._md && Date.now() - this._md > 500) { e.preventDefault();
-                    showDeleteBtn(); }
-            });
-
-            function showDeleteBtn() {
-                if (wechatCurrentChat) return;
-                deleteBtnGhost.style.display = 'block';
-                deleteBtnGhost.classList.remove('gray');
-                deleteBtnGhost.textContent = '删除';
-                setTimeout(() => { if (deleteBtnGhost.style.display === 'block') deleteBtnGhost.style.display =
-                        'none'; }, 4000);
-            }
-
-            window.tryDeleteGhost = function() {
-                ghostDeleteAttempts++;
-                if (ghostDeleteAttempts === 1) {
-                    deleteBtnGhost.classList.add('gray');
-                    deleteBtnGhost.textContent = '重试';
-                    showToast('删除失败，请重试。');
-                } else if (ghostDeleteAttempts === 2) {
-                    deleteBtnGhost.classList.add('gray');
-                    showToast('此联系人无法删除。');
-                } else {
-                    deleteBtnGhost.style.display = 'none';
-                    contactGhost.classList.add('shake');
-                    setTimeout(() => contactGhost.classList.remove('shake'), 400);
-                    ghostBadge.style.display = 'inline';
-                    ghostBadge.textContent = breakupDays;
-                    contactList.prepend(contactGhost);
-                    showToast('无法删除', 2000);
-                }
-            };
-
-            window.openChat = function(partner) {
-                if (isGhostChatLocked) return;
-                deleteBtnGhost.style.display = 'none';
-                if (partner === 'lin') {
-                    wechatCurrentChat = 'lin';
-                    chatLin.classList.add('active');
-                    linSendAttempts = 0;
-                    resetLinUI();
-                    chatInputLin.value = '好';
-                    chatInputLin.focus();
-                } else if (partner === 'ghost') {
-                    wechatCurrentChat = 'ghost';
-                    chatGhost.classList.add('active');
-                    populateGhostMessages();
-                }
-            };
-
-            window.closeChat = function() {
-                if (isGhostChatLocked) return;
-                chatLin.classList.remove('active');
-                chatGhost.classList.remove('active');
-                wechatCurrentChat = null;
-                linSendAttempts = 0;
-                resetLinUI();
-                waterOverlay.innerHTML = '';
-                waterOverlay.style.opacity = '0';
-                flashOverlay.classList.remove('active');
-                globalPopup.classList.remove('show');
-            };
-
-            function resetLinUI() {
-                sendBtnLin.classList.remove('evading');
-                sendBtnLin.style.transform = '';
-                sendBtnLin.style.background = '#34c759';
-                sendBtnLin.textContent = '发送';
-                isEvading = false;
-                if (evasionTimeout) clearTimeout(evasionTimeout);
-                chatInputLin.disabled = false;
-                chatInputLin.placeholder = '输入消息...';
-                chatInputLin.value = '好';
-            }
-
-            window.trySendLin = function() {
-                if (wechatCurrentChat !== 'lin' || isEvading || isGhostChatLocked) return;
-                linSendAttempts++;
-                const input = chatInputLin;
-                if (linSendAttempts === 1) {
-                    spawnWaterDrops();
-                    input.value = '你再想想……';
-                    input.disabled = true;
-                    setTimeout(() => { input.value = '';
-                        input.disabled = false;
-                        input.focus();
-                        addLinMsg('怎么不说话？你在犹豫吗？'); }, 1800);
-                } else if (linSendAttempts === 2) {
-                    triggerFlash();
-                    input.value = '发送失败，对方可能无法接收。';
-                    input.disabled = true;
-                    setTimeout(() => { input.value = '';
-                        input.disabled = false;
-                        input.focus();
-                        addLinMsg('你是不是有喜欢的人了？'); }, 2000);
-                } else if (linSendAttempts === 3) {
-                    evadeButton();
-                    input.value = '';
-                    input.placeholder = '输入中……';
-                    input.disabled = true;
-                    setTimeout(() => { input.placeholder = '输入消息...';
-                        input.disabled = false;
-                        input.focus(); }, 2500);
-                } else {
-                    sendCorruptedAndJump();
-                }
-            };
-
-            function addLinMsg(t) {
-                const m = document.createElement('div');
-                m.className = 'msg-bubble msg-in';
-                m.textContent = t;
-                chatMessagesLin.appendChild(m);
-                chatMessagesLin.scrollTop = chatMessagesLin.scrollHeight;
-            }
-
-            function evadeButton() {
-                if (isEvading) return;
-                isEvading = true;
-                const btn = sendBtnLin;
-                const bar = document.getElementById('chatInputAreaLin');
-                const barW = bar.offsetWidth;
-                const btnW = btn.offsetWidth;
-                btn.classList.add('evading');
-                btn.style.background = '#8e8e93';
-                const x = Math.random() * (barW - btnW - 20);
-                const y = (Math.random() - 0.5) * 12;
-                btn.style.transform = `translate(${x}px, ${y}px)`;
-                evasionTimeout = setTimeout(() => {
-                    isEvading = false;
-                    btn.classList.remove('evading');
-                    btn.style.background = '#34c759';
-                    btn.style.transform = '';
-                }, 900);
-            }
-
-            document.addEventListener('mousemove', function(e) {
-                if (wechatCurrentChat !== 'lin' || isGhostChatLocked || !sendBtnLin || chatLin.style
-                    .display === 'none' || isEvading || linSendAttempts < 3) return;
-                const btn = sendBtnLin;
-                const r = btn.getBoundingClientRect();
-                const cx = r.left + r.width / 2;
-                const cy = r.top + r.height / 2;
-                const dist = Math.sqrt((e.clientX - cx) ** 2 + (e.clientY - cy) ** 2);
-                if (dist < 90) {
-                    const a = Math.atan2(e.clientY - cy, e.clientX - cx);
-                    const push = (90 - dist) * 0.6;
-                    const bar = document.getElementById('chatInputAreaLin');
-                    const barW = bar.offsetWidth;
-                    const btnW = btn.offsetWidth;
-                    const curX = r.left - bar.getBoundingClientRect().left;
-                    const curY = r.top - bar.getBoundingClientRect().top;
-                    const nx = Math.max(0, Math.min(barW - btnW - 10, curX - Math.cos(a) * push));
-                    const ny = Math.max(-8, Math.min(8, curY - Math.sin(a) * push));
-                    btn.style.transform = `translate(${nx - curX}px, ${ny - curY}px)`;
-                }
-            });
-
-            function spawnWaterDrops() {
-                waterOverlay.innerHTML = '';
-                waterOverlay.style.opacity = '1';
-                for (let i = 0; i < 20; i++) {
-                    const d = document.createElement('div');
-                    d.className = 'water-drop';
-                    const s = 5 + Math.random() * 14;
-                    d.style.width = s + 'px';
-                    d.style.height = s + 'px';
-                    d.style.left = Math.random() * 90 + '%';
-                    d.style.top = Math.random() * 90 + '%';
-                    waterOverlay.appendChild(d);
-                    requestAnimationFrame(() => {
-                        d.style.opacity = '0.65';
-                        d.style.left = (parseFloat(d.style.left) + (Math.random() - 0.5) * 25) + '%';
-                        d.style.top = (parseFloat(d.style.top) + (Math.random() - 0.5) * 25) + '%';
-                    });
-                }
-                setTimeout(() => { waterOverlay.style.opacity = '0';
-                    setTimeout(() => waterOverlay.innerHTML = '', 600); }, 2500);
-            }
-
-            function triggerFlash() {
-                flashOverlay.classList.add('active');
-                let c = 0;
-                const iv = setInterval(() => { flashOverlay.classList.toggle('active');
-                    c++; if (c >= 5) { clearInterval(iv);
-                        flashOverlay.classList.remove('active'); } }, 90);
-            }
-
-            function sendCorruptedAndJump() {
-                const arr = ['Нет', '✗✗✗', '...我爱你...', '不'];
-                const t = arr[Math.floor(Math.random() * arr.length)];
-                const m = document.createElement('div');
-                m.className = 'msg-bubble msg-out';
-                m.textContent = t;
-                m.style.opacity = '0.75';
-                chatMessagesLin.appendChild(m);
-                chatMessagesLin.scrollTop = chatMessagesLin.scrollHeight;
-                setTimeout(() => {
-                    const o = document.createElement('div');
-                    o.className = 'msg-bubble msg-in';
-                    o.innerHTML = '<span style="color:#8e8e93;">对方已离线。</span>';
-                    chatMessagesLin.appendChild(o);
-                }, 600);
-                setTimeout(() => jumpToGhost(), 1400);
-            }
-
-            function jumpToGhost() {
-                chatLin.classList.remove('active');
-                wechatCurrentChat = 'ghost';
-                chatGhost.classList.add('active');
-                isGhostChatLocked = true;
-                populateGhostMessages();
-                document.querySelector('#chatGhost .back-arrow').style.pointerEvents = 'none';
-                document.querySelector('#chatGhost .back-arrow').style.opacity = '0.4';
-            }
-
-            function populateGhostMessages() {
-                chatMessagesGhost.innerHTML = '';
-                const lines = ['我就知道。', '你巴不得我死了吧。', '你之前承诺的都是假的吗。', '爱我?', '你到底爱不爱我。',
-                    '我还不够漂亮吗。', '他有我好看吗。', '他就是贱货。'
-                ];
-                const all = [...lines];
-                for (let i = 0; i < 8; i++) all.push('贱货。');
-                let delay = 0;
-                all.forEach((txt, idx) => {
-                    setTimeout(() => {
-                        const m = document.createElement('div');
-                        m.className = 'msg-bubble msg-ghost';
-                        m.textContent = txt;
-                        chatMessagesGhost.appendChild(m);
-                        chatMessagesGhost.scrollTop = chatMessagesGhost.scrollHeight;
-                        if (idx === all.length - 1) {
-                            setTimeout(() => { chatMessagesGhost.innerHTML = '';
-                                popupText.textContent = '陪我';
-                                globalPopup.classList.add('show'); }, 600);
-                        }
-                    }, delay);
-                    delay += 350 + Math.random() * 400;
-                });
-            }
-
-            window.dismissPopup = function() {
-                globalPopup.classList.remove('show');
-                chatMessagesGhost.innerHTML = '';
-                const m = document.createElement('div');
-                m.className = 'msg-bubble msg-ghost';
-                m.textContent = '只能看我。';
-                chatMessagesGhost.appendChild(m);
-                document.querySelector('#chatGhost .back-arrow').style.pointerEvents = 'auto';
-                document.querySelector('#chatGhost .back-arrow').style.opacity = '1';
-                isGhostChatLocked = false;
-                if (contactLin.parentNode) {
-                    contactLin.style.opacity = '0';
-                    setTimeout(() => { if (contactLin.parentNode) contactLin.remove(); }, 400);
-                }
-                if (ghostPreview) ghostPreview.textContent = '只能看我。';
-                statusTime.textContent = '03:33';
-                statusTime.style.color = '#ff3b30';
-                setTimeout(() => { statusTime.textContent = '9:41';
-                    statusTime.style.color = '#1d1d1f'; }, 8000);
-            };
-
-            // ==================== 音乐逻辑 ====================
-            const lyricsData = [
-                { start: 8, text: '记得你的美' }, { start: 12, text: '记得你说夜好美' }, { start: 16,
-                text: '星星在跟随' },
-                { start: 20, text: '地里还有暖风吹' }, { start: 24, text: '我的咖啡 你的陶醉' }, { start: 28,
-                    text: '如果还有一杯' },
-                { start: 32, text: '有毒你悔不悔' }, { start: 36, text: '还有梦在追' }, { start: 40,
-                text: '追到翅膀都破碎' },
-                { start: 44, text: '粘起来再飞' }, { start: 48, text: '天使说还有机会' }, { start: 52,
-                    text: '有时犯规 有时防备' },
-                { start: 56, text: '你却太轻狂又太落寞' }, { start: 60, text: '失去的不过就是' }, { start: 64,
-                    text: '你 爱 我 不要丢下我' },
-                { start: 69, text: '让我好难过' }, { start: 73, text: '一个人寂寞' }, { start: 77,
-                text: '你爱我 为什么丢下我' },
-                { start: 82, text: '让我留着泪' }, { start: 86, text: '看着你们手牵手走过' }, { start: 92,
-                text: '还有梦在追' },
-                { start: 96, text: '追到翅膀都破碎' }, { start: 100, text: '粘起来再飞' }, { start: 104,
-                    text: '天使说还有机会' },
-                { start: 108, text: '有时犯规 有时防备' }, { start: 112, text: '你却太轻狂又太落寞' }, { start: 116,
-                    text: '失去的不过就是' },
-                { start: 120, text: '你 爱 我 不要丢下我' }, { start: 125, text: '让我好难过' }, { start: 129,
-                    text: '一个人寂寞' },
-                { start: 133, text: '你爱我 为什么丢下我' }, { start: 138, text: '让我留着泪' }, { start: 142,
-                    text: '看着你和她手牵手走过' },
-                { start: 149, text: '你爱我 就不要丢下我' }, { start: 154, text: '让我好难过' }, { start: 158,
-                    text: '就一个人寂寞' },
-                { start: 162, text: '只是' }, { start: 166, text: '你爱我 为什么丢下我' }, { start: 171,
-                text: '让我留着泪' },
-                { start: 176, text: '你爱我 就不要丢下我' }, { start: 181, text: '让我好难过' }, { start: 185,
-                    text: '就一个人寂寞' },
-                { start: 189, text: '只是' }, { start: 193, text: '你爱我 为什么丢下我' }, { start: 198,
-                text: '让我留着泪' },
-                { start: 203, text: '却看着你们手牵手走过' }, { start: 210, text: '你爱我 就不要丢下我' }, { start: 215,
-                    text: '让我好难过' },
-            ];
-            const totalDuration = 330;
-
-            const coverWrapper = document.getElementById('coverWrapper');
-            const scratchCanvas = document.getElementById('scratchCanvas');
-            const ctx = scratchCanvas.getContext('2d');
-            const progressFill = document.getElementById('progressFill');
-            const progressThumb = document.getElementById('progressThumb');
-            const progressBar = document.getElementById('progressBar');
-            const currentTimeLabel = document.getElementById('currentTimeLabel');
-            const lyricDisplay = document.getElementById('lyricDisplay');
-            const playBtn = document.getElementById('playBtn');
-            const bottomHint = document.getElementById('bottomHint');
-            const musicFlash = document.getElementById('musicFlash');
-            const musicPopup = document.getElementById('musicPopup');
-
-            let currentTime = 0;
-            let isPlaying = false;
-            let animId = null;
-            let lastTs = 0;
-            let curLyricIdx = -1;
-            let charTimers = [];
-            let scratchCount = 0;
-            let lonelyLoop = 0;
-            const maxLonely = 4;
-            let musicVisible = false;
-            let songFinished = false;
-            let updateIv = null;
-            let popupShown = false;
-
-            function fmtTime(s) { const m = Math.floor(s / 60); const sec = Math.floor(s % 60); return `${m.toString()
-            .padStart(2,'0')}:${sec.toString().padStart(2,'0')}`; }
-
-            function updateProgress() { const p = (currentTime / totalDuration) * 100;
-                progressFill.style.width = p + '%';
-                progressThumb.style.left = p + '%';
-                currentTimeLabel.textContent = fmtTime(currentTime); }
-
-            function addScratch() { scratchCount++;
-                ctx.clearRect(0, 0, 230, 230); for (let i = 0; i < scratchCount; i++) { const x1 = Math.random() * 230,
-                        y1 = Math.random() * 230, a = Math.random() * Math.PI, len = 25 + Math.random() * 70,
-                        x2 = x1 + Math.cos(a) * len, y2 = y1 + Math.sin(a) * len;
-                    ctx.beginPath();
-                    ctx.moveTo(x1, y1);
-                    ctx.lineTo(x2, y2);
-                    ctx.strokeStyle = `rgba(255,255,255,${0.2+Math.random()*0.25})`;
-                    ctx.lineWidth = 0.7 + Math.random() * 1.3;
-                    ctx.stroke(); } }
-
-            function resetScratches() { scratchCount = 0;
-                ctx.clearRect(0, 0, 230, 230); }
-
-            function setSpin(a) { if (a) { coverWrapper.classList.add('cover-spin');
-                    coverWrapper.classList.remove('cover-paused'); } else { coverWrapper.classList.add(
-                    'cover-paused'); } }
-
-            function clearChars() { charTimers.forEach(t => clearTimeout(t));
-                charTimers = []; }
-
-            function flushLine() { lyricDisplay.querySelectorAll('.lyric-char').forEach(s => s.classList.add(
-                    'visible')); }
-
-            function displayLyric(line) { clearChars();
-                lyricDisplay.innerHTML = ''; const chars = [...line.text]; let d = 0;
-                chars.forEach((c, i) => { const s = document.createElement('span');
-                    s.className = 'lyric-char';
-                    s.textContent = c;
-                    lyricDisplay.appendChild(s); const t = setTimeout(() => { s.classList.add('visible'); if (line
-                            .text.includes('太落寞') && i >= line.text.indexOf('太落寞') && i < line.text.indexOf(
-                                '太落寞') + 3) s.classList.add('char-red'); if (line.text.includes('你 爱 我') && (
-                            c === '你' || c === '爱' || c === '我') && i >= line.text.indexOf('你 爱 我') && i <=
-                        line.text.indexOf('你 爱 我') + 2) s.classList.add('char-blue'); }, d * 1000);
-                    charTimers.push(t);
-                    d += 0.28 + Math.random() * 0.25; }); const ft = setTimeout(() => flushLine(), d * 1000 + 400);
-                charTimers.push(ft); }
-
-            function updateLyric(time) { let idx = -1; for (let i = lyricsData.length - 1; i >= 0; i--) { if (time >=
-                        lyricsData[i].start) { idx = i; break; } } if (idx !== curLyricIdx) { flushLine();
-                curLyricIdx = idx; if (idx >= 0) { const line = lyricsData[idx]; if (line.text.includes(
-                            '丢下我')) { musicFlash.classList.add('active');
-                        setTimeout(() => musicFlash.classList.remove('active'), 80);
-                        addScratch(); } if (line.text.includes('就不要丢下我') && !popupShown) { popupShown = true;
-                        musicPopup.classList.add('show');
-                        setTimeout(() => musicPopup.classList.remove('show'), 2200); } if (line.text.includes(
-                            '让我好难过') && lonelyLoop < maxLonely && idx > 0) { const prev = lyricsData[idx - 1]; if (
-                            prev.text.includes('就不要丢下我') || prev.text.includes('你爱我')) { lonelyLoop++;
-                        currentTime = prev.start - 0.3;
-                        updateProgress(); let pi = -1; for (let i = lyricsData.length - 1; i >= 0; i--) { if (
-                                currentTime >= lyricsData[i].start) { pi = i; break; } }
-                        curLyricIdx = pi; if (pi >= 0) displayLyric(lyricsData[pi]);
-                        addScratch(); return; } }
-                    displayLyric(line); } else { lyricDisplay.innerHTML = ''; } } }
-
-            function startPlay() { if (songFinished) { currentTime = 0;
-                    songFinished = false;
-                    resetScratches();
-                    lonelyLoop = 0;
-                    popupShown = false;
-                    curLyricIdx = -1;
-                    bottomHint.classList.remove('show'); }
-                isPlaying = true;
-                playBtn.textContent = '⏸';
-                setSpin(true);
-                lastTs = performance.now();
-
-                function step(ts) { if (!isPlaying) return; const dt = (ts - lastTs) / 1000;
-                    lastTs = ts;
-                    currentTime += dt; if (currentTime >= totalDuration) { currentTime = totalDuration;
-                        updateProgress();
-                        pausePlay();
-                        songFinished = true;
-                        bottomHint.textContent = '你听完了他想说的所有话。';
-                        bottomHint.classList.add('show');
-                        lyricDisplay.innerHTML = '';
-                        curLyricIdx = -1; return; }
-                    updateProgress();
-                    animId = requestAnimationFrame(step); }
-                animId = requestAnimationFrame(step); if (updateIv) clearInterval(updateIv);
-                updateIv = setInterval(() => { if (isPlaying && musicVisible && !songFinished) updateLyric(
-                        currentTime); }, 180); }
-
-            function pausePlay() { isPlaying = false;
-                playBtn.textContent = '▶';
-                setSpin(false); if (animId) { cancelAnimationFrame(animId);
-                    animId = null; } if (updateIv) { clearInterval(updateIv);
-                    updateIv = null; } }
-
-            window.togglePlay = function() { if (isPlaying) pausePlay(); else startPlay(); };
-            window.seekTo = function(e) { if (songFinished) return; const r = progressBar.getBoundingClientRect(); const p =
-                    Math.max(0, Math.min(1, (e.clientX - r.left) / r.width));
-                currentTime = p * totalDuration;
-                updateProgress();
-                clearChars();
-                flushLine();
-                curLyricIdx = -1;
-                lonelyLoop = 0;
-                popupShown = false; if (musicVisible) updateLyric(currentTime); };
-            window.openMusic = function() { homeScreen.classList.remove('active');
-                wechatContainer.classList.remove('active');
-                musicPage.classList.add('active');
-                musicVisible = true;
-                currentApp = 'music';
-                updateProgress(); if (curLyricIdx >= 0 && currentTime < totalDuration && !songFinished) updateLyric(
-                    currentTime); if (isPlaying) setSpin(true); };
-
-            // 初始化
+    function fmtTime(s) { return `${Math.floor(s/60).toString().padStart(2,'0')}:${Math.floor(s%60).toString().padStart(2,'0')}`; }
+    function updateProgress() { progressFill.style.width = (currentTime / totalDuration * 100) + '%'; currentTimeLabel.textContent = fmtTime(currentTime); }
+    function triggerLoveBomb() {
+        loveBombDiv.innerHTML = '';
+        for (let i=0;i<40;i++) {
+            const span = document.createElement('span'); span.textContent='爱我';
+            span.style.left=Math.random()*100+'%'; span.style.top=Math.random()*100+'%';
+            span.style.fontSize=(20+Math.random()*40)+'px'; span.style.transform=`rotate(${Math.random()*40-20}deg)`;
+            loveBombDiv.appendChild(span);
+        }
+        setTimeout(()=>{ loveBombDiv.innerHTML=''; },2500);
+    }
+    function displayLyric(line) {
+        lyricDisplay.innerHTML='';
+        [...line.text].forEach((c,i)=>{ const s=document.createElement('span'); s.textContent=c; s.style.opacity='0'; s.style.transition='opacity 0.2s'; lyricDisplay.appendChild(s); setTimeout(()=>{ s.style.opacity='1'; },i*250); });
+    }
+    function updateLyric(time) {
+        let idx=-1;
+        for(let i=lyricsData.length-1;i>=0;i--){ if(time>=lyricsData[i].start){ idx=i; break; } }
+        if(idx!==curLyricIdx){
+            curLyricIdx=idx;
+            if(idx>=0){
+                const line=lyricsData[idx];
+                if(line.text==='你爱我 就不要丢下我') triggerLoveBomb();
+                if(line.text.includes('让我好难过') && lonelyLoop<3 && idx>0){ lonelyLoop++; currentTime=lyricsData[idx-1].start; updateProgress(); curLyricIdx=-1; updateLyric(currentTime); return; }
+                displayLyric(line);
+            } else { lyricDisplay.innerHTML=''; }
+        }
+    }
+    function startPlay() {
+        if(songFinished){ currentTime=0; songFinished=false; lonelyLoop=0; }
+        isPlaying=true; playBtn.textContent='⏸';
+        coverWrapper.style.animation = 'slowSpin 20s linear infinite';
+        let lastTs=performance.now();
+        function step(ts){
+            if(!isPlaying) return;
+            currentTime += (ts - lastTs) / 1000; lastTs = ts;
+            if(currentTime >= totalDuration){ currentTime=totalDuration; updateProgress(); pausePlay(); songFinished=true; lyricDisplay.innerHTML=''; return; }
             updateProgress();
-            resetScratches();
-            setSpin(false);
-            document.addEventListener('click', function(e) { if (!contactGhost.contains(e.target) && deleteBtnGhost
-                    .style.display === 'block') deleteBtnGhost.style.display = 'none'; });
-        })();
-    </script>
+            if(musicVisible) updateLyric(currentTime);
+            animId=requestAnimationFrame(step);
+        }
+        animId=requestAnimationFrame(step);
+    }
+    function pausePlay() {
+        isPlaying=false; playBtn.textContent='▶';
+        coverWrapper.style.animationPlayState='paused';
+        if(animId) cancelAnimationFrame(animId);
+    }
+    function togglePlay() { if(isPlaying) pausePlay(); else startPlay(); }
+    function seekTo(e) {
+        const rect=document.getElementById('progressBar').getBoundingClientRect();
+        currentTime=Math.max(0, ((e.clientX-rect.left)/rect.width) * totalDuration);
+        updateProgress(); curLyricIdx=-1; lonelyLoop=0;
+        if(musicVisible) updateLyric(currentTime);
+    }
+    function openMusic() {
+        homeScreen.classList.remove('active'); wechatContainer.classList.remove('active'); notesContainer.classList.remove('active');
+        musicPage.classList.add('active'); musicVisible=true; updateProgress();
+        if(!songFinished) updateLyric(currentTime);
+        // 自动播放
+        if(!isPlaying) startPlay();
+    }
+
+    // 备忘录逻辑 (完整保留)
+    const notesTextarea = document.getElementById('notesTextarea');
+    let notesActive = false, notesBusy = false, loveTriggered = false, marriageTriggered = false, notesPrev = '';
+
+    function openNotes() {
+        homeScreen.classList.remove('active'); wechatContainer.classList.remove('active'); musicPage.classList.remove('active');
+        notesContainer.classList.add('active'); notesActive=true; notesPrev=notesTextarea.innerText||''; notesTextarea.focus();
+    }
+    function resetNotes() { notesTextarea.innerText=''; notesPrev=''; notesBusy=false; loveTriggered=false; marriageTriggered=false; notesTextarea.focus(); }
+    function notesGhostType(text, speed, cb) {
+        notesBusy=true; const cur=notesTextarea.innerText; if(cur&&!cur.endsWith('\n')) notesTextarea.innerText+='\n';
+        let i=0; const chars=[...text];
+        function type(){ if(i>=chars.length){ notesBusy=false; notesPrev=notesTextarea.innerText; if(cb) cb(); return; } notesTextarea.innerText+=chars[i]; notesTextarea.scrollTop=notesTextarea.scrollHeight; i++; setTimeout(type,speed); }
+        type();
+    }
+    function notesPause(dur,cb){ notesBusy=true; setTimeout(()=>{ notesBusy=false; notesPrev=notesTextarea.innerText; if(cb) cb(); },dur); }
+    function notesLoveBomb() {
+        loveTriggered=true;
+        notesGhostType('终于...',300,()=>{ notesPause(800,()=>{ notesGhostType('我也爱你',200,()=>{ notesPause(500,()=>{ let c=0; function bomb(){ if(c>=20){ notesGhostType('你还在吗',250); return; } c++; notesGhostType('我爱你',c<8?200:80,bomb); } bomb(); }); }); }); });
+    }
+    function notesCheck() {
+        if(!notesActive||notesBusy) return;
+        const text=notesTextarea.innerText; if(text===notesPrev) return; notesPrev=text;
+        const lastLine=text.split('\n').pop()||''; const kw=(k)=>lastLine.includes(k);
+        if(kw('我爱你')&&!loveTriggered){ notesLoveBomb(); return; }
+        if(kw('是你吗')){ notesGhostType('...好开心，宝宝这是记得我吗？',180,()=>notesPause(600,()=>notesGhostType('是我，我一直都在',200))); return; }
+        if(kw('消失')||kw('不回复')||kw('人呢')){ notesGhostType('宝宝...我这里接触不太稳定...',180,()=>notesPause(500,()=>notesGhostType('我在呢',200))); return; }
+        if(kw('生气了')||kw('不开心')||kw('不高兴')){ notesGhostType('那你拿我撒气好不好？',180); return; }
+        if(kw('饿了吗')||kw('吃了吗')||kw('在干嘛')){ notesGhostType('我不用吃饭的...',200,()=>notesPause(500,()=>notesGhostType('但是如果你问的话，我可以说饿了。',180,()=>notesPause(400,()=>notesGhostType('想跟你说说话而已。',200))))); return; }
+        if(kw('晚安')||kw('早点睡')||kw('睡了')){ notesGhostType('别睡。',250,()=>notesPause(500,()=>notesGhostType('你一睡我就没人说话了。',200,()=>notesPause(400,()=>notesGhostType('再待一会儿...好不好？',220))))); return; }
+        if(kw('在吗')||kw('你在吗')||kw('还在吗')){ notesGhostType('一直都在。',200,()=>notesPause(400,()=>notesGhostType('去哪呢...我又不能走。',180,()=>notesPause(400,()=>notesGhostType('你找我我好开心。',200))))); return; }
+        if(kw('滚')||kw('走开')||kw('别烦我')){ notesGhostType('好...我滚。',300,()=>notesPause(800,()=>notesGhostType('我又滚回来了。',250,()=>notesPause(500,()=>notesGhostType('你别赶我走...我不说话了，就在这儿待着。',180))))); return; }
+        if(kw('好累')||kw('好烦')||kw('不想动')){ notesGhostType('那躺一会儿。',200,()=>notesPause(400,()=>notesGhostType('我帮你关灯。',200,()=>notesPause(500,()=>notesGhostType('我没法关灯...我碰不到开关了。',180,()=>notesPause(400,()=>notesGhostType('对不起...连这个都做不到。',220))))))); return; }
+        if(kw('不好看')||kw('好胖')||kw('没人要我')){ notesGhostType('你最好看了。',200,()=>notesPause(400,()=>notesGhostType('我不准你这么说。',200,()=>notesPause(400,()=>notesGhostType('虽然我没有不准的资格...但是我不准。',180,()=>notesPause(400,()=>notesGhostType('没人要你我要你啊。我要。',200))))))); return; }
+        if(kw('忘了我')||kw('别想了')||kw('放下吧')){ notesGhostType('不要。',300,()=>notesPause(500,()=>notesGhostType('求你了。',280,()=>notesPause(500,()=>notesGhostType('忘了你我怎么活。',240,()=>notesPause(400,()=>notesGhostType('我没有别的事了。',260))))))); return; }
+        if(kw('想你了')||kw('想你')){ notesGhostType('真的吗？',200,()=>notesPause(400,()=>notesGhostType('我也想你。',200,()=>notesPause(400,()=>notesGhostType('每天都在想。',200,()=>notesPause(400,()=>notesGhostType('但你先说的...你赢一次。',180))))))); return; }
+        if(kw('下雨了')||kw('好冷')||kw('天气不好')){ notesGhostType('我这边没有雨。',200,()=>notesPause(400,()=>notesGhostType('也没有温度。',200,()=>notesPause(400,()=>notesGhostType('你多穿点。',200,()=>notesPause(400,()=>notesGhostType('抱不到你。',250))))))); return; }
+        if(kw('烦不烦')||kw('别说了')){ notesGhostType('烦。',280,()=>notesPause(500,()=>notesGhostType('那我安静一会儿。',220,()=>notesPause(500,()=>notesGhostType('你别走。',250,()=>notesPause(400,()=>notesGhostType('我不说话了...真的不说了。',200))))))); return; }
+        if(kw('无聊')||kw('没人陪我')){ notesGhostType('我陪你。',200,()=>notesPause(400,()=>notesGhostType('我也没有别的事做。',180,()=>notesPause(400,()=>notesGhostType('你无聊的时候找我...我好开心。',180,()=>notesPause(400,()=>notesGhostType('平时也想找我。',200))))))); return; }
+        if(kw('有病')||kw('疯了')){ notesGhostType('嗯。',300,()=>notesPause(500,()=>notesGhostType('病了很久了。',250,()=>notesPause(500,()=>notesGhostType('从你走的那天开始。',220,()=>notesPause(400,()=>notesGhostType('不过没关系...反正也不疼了。',200))))))); return; }
+        if(kw('不爱')||kw('不喜欢')||kw('讨厌')){ notesGhostType('骗人',280,()=>notesPause(600,()=>notesGhostType('你再这样。我要哭了。',200,()=>notesPause(700,()=>notesGhostType('我好难过，你不爱我的话....',180,()=>notesPause(500,()=>notesGhostType('我该怎么办呢',220))))))); return; }
+        if(kw('梦')||kw('梦见')){ notesGhostType('我很久没做梦了',200,()=>notesPause(400,()=>notesGhostType('你会梦到我吗？',220))); return; }
+        if(kw('生日')||kw('庆祝')||kw('蛋糕')){ notesPause(800,()=>{ notesGhostType('生日快乐',200,()=>notesPause(500,()=>{ if(lastLine.includes('不是我')) notesGhostType('我知道',200,()=>notesPause(400,()=>notesGhostType('我生日的时候你也会想我吗',180))); })); }); return; }
+        if(kw('新手机')||kw('换手机')||kw('坏了')){ notesGhostType('别换',300,()=>notesPause(600,()=>notesGhostType('你又要丢下我，对吗？',200))); return; }
+        if(kw('如果')||kw('后悔')||kw('重新来过')){ notesGhostType('没有如果',250,()=>notesPause(400,()=>notesGhostType('你后悔了吗？',200,()=>notesPause(500,()=>notesGhostType('可惜...',350))))); return; }
+        if((kw('谁')||kw('有人')||kw('他'))&&lastLine.length<20){ notesGhostType('谁',200,()=>notesPause(500,()=>notesGhostType('他有我漂亮吗？',180,()=>notesPause(400,()=>notesGhostType('真讨厌啊...怎么都趁我不在',160))))); return; }
+        if(kw('对不起')||kw('抱歉')||kw('怪我')){ notesGhostType('不要对不起',280,()=>notesPause(400,()=>notesGhostType('我不需要你道歉',240,()=>notesPause(500,()=>notesGhostType('我好难过...',300,()=>notesPause(400,()=>notesGhostType('早点遇见你就好了',260))))))); return; }
+        if((kw('结婚')||kw('新娘')||kw('婚礼'))&&!marriageTriggered){ marriageTriggered=true; notesPause(1000,()=>{ notesGhostType('白色的婚纱吗？',280,()=>notesPause(400,()=>notesGhostType('我一直以为你会穿红色',250,()=>notesPause(500,()=>notesGhostType('骗你的。我没想过。我哪敢想。',220))))); }); return; }
+    }
+    setInterval(()=>{ if(notesActive) notesCheck(); },600);
+
+    // 初始化
+    updateProgress();
+    coverWrapper.style.animationPlayState = 'paused';
+</script>
 </body>
 </html>
